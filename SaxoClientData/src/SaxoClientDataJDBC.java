@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SaxoClientDataJDBC {
 
@@ -45,7 +46,7 @@ public String getToken(String login) {
 
 
 public int updateSaxoClientData(SaxoClientDataObj client,String server,String houseId,String tableName) {
-	if(houseId != null &&houseId.length() > 0)
+	//if(houseId != null &&houseId.length() > 0)
 			System.out.println("Updating Client:" + client.getClientName() + " houseId:" + houseId + " saxoId:"
 					+ client.getSaxoUserId() + " snusername:" + client.getSharenetLogin() + " table:" + tableName
 					+ " server:" + server + " accountId:" + client.getDefaultAccountId());
@@ -54,7 +55,7 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 	int cnt = 0;
 	String sql = "UPDATE trade." + tableName  + "  SET sn_login = ?, saxo_userid = ?, saxo_name = ?,"
 			+ " saxo_client_key = ?,last_update = sysdate ,  account_id = ?, account_key = ?,currency = ?, houseid = ? "
-			+ "WHERE saxo_userid = ? AND server = ? AND account_id = ?";
+			+ "WHERE saxo_userid = ? AND server = ? AND account_id = ? AND (sn_login = ? OR sn_login is null)";
 	try {
 		
 		if(psSaxoClientDataUpdate == null )
@@ -71,6 +72,7 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 		psSaxoClientDataUpdate.setString(9, client.getSaxoUserId());
 		psSaxoClientDataUpdate.setString(10, server);
 		psSaxoClientDataUpdate.setString(11, client.getDefaultAccountId());
+		psSaxoClientDataUpdate.setString(12, client.getSharenetLogin());
 		
 		
 		cnt = psSaxoClientDataUpdate.executeUpdate();
@@ -101,8 +103,11 @@ public  String getCookie(String group) {
 	return cookie;
 }
 
-public SaxoClientDataObj setSharenetFields(SaxoClientDataObj client,int bcode) {
-		System.out.println("SharenetFields: BCODE:" + bcode + " Nacc:" + client.getSaxoUserId());
+public List<SaxoClientDataObj> setSharenetFields(SaxoClientDataObj client, int bcode) {
+
+	List<SaxoClientDataObj> list = new ArrayList<SaxoClientDataObj>();
+
+	System.out.println("SharenetFields: BCODE:" + bcode + " Nacc:" + client.getSaxoUserId());
 	String sql = "SELECT login,uidn FROM trade.user_accs WHERE bcode = ? AND nacc = ? ";
 	/*if(client.getSaxoUserId().equals("8918783")) {
 		System.out.println(sql + " " + client.getSaxoUserId() + " " + bcode);
@@ -115,11 +120,14 @@ public SaxoClientDataObj setSharenetFields(SaxoClientDataObj client,int bcode) {
 		psSaxoClientSharenetDetails.setString(2, client.getSaxoUserId());
 		ResultSet rs = psSaxoClientSharenetDetails.executeQuery();
 		while(rs.next()) {
-			
-			client.setSharenetLogin(rs.getString("LOGIN"));
-				System.out.println("Setting LOGIN: " + rs.getString("LOGIN") + " saxoid:" + client.getSaxoUserId()
-						+ " bcode:" + bcode + " uidn:" + rs.getLong("UIDN"));
-			client.setSharenetUidn(rs.getLong("UIDN"));
+			SaxoClientDataObj o = client.clone();
+			o.setSharenetLogin(rs.getString("LOGIN"));
+			System.out.println("Setting LOGIN: " + rs.getString("LOGIN") + " saxoid:" + client.getSaxoUserId() + " bcode:" + bcode + " uidn:"
+					+ rs.getLong("UIDN"));
+			o.setSharenetUidn(rs.getLong("UIDN"));
+			list.add(o);
+			if (client.getSaxoUserId().contentEquals("8551699"))
+				System.out.println("MultiACC:" + rs.getString("LOGIN"));
 			
 		}
 		rs.close();
@@ -132,7 +140,7 @@ public SaxoClientDataObj setSharenetFields(SaxoClientDataObj client,int bcode) {
 		
 		
 	
-	return client;
+	return list;
 }
 
 
@@ -166,7 +174,7 @@ public int insertSaxoClientData(SaxoClientDataObj client,String server,String ow
 			psSaxoClientDataInsert = conn.prepareStatement(sql);
 		psSaxoClientDataInsert.setString(1, client.getSharenetLogin());
 		psSaxoClientDataInsert.setString(2,client.getSaxoUserId());
-		System.out.println("InsertingName:" + client.getClientName() + " " + client.getSaxoClientKey());
+		System.out.println("InsertingName:" + client.getClientName() + " " + client.getSaxoClientKey() + " Login:" + client.getSharenetLogin());
 		//psSaxoClientDataInsert.setString(3, (new String(client.getClientName().getBytes() , Charset.forName("WE8ISO8859P1"))));
 		
 		psSaxoClientDataInsert.setString(3, (client.getClientName()));
@@ -188,7 +196,7 @@ public int insertSaxoClientData(SaxoClientDataObj client,String server,String ow
 	
 }
 
-public int getAccountCount(ClientAccount account,String tableName) {
+public int getAccountCount(ClientAccount account, String tableName) {
 
 	int cnt = 0;
 	String sql = "SELECT count(*) FROM trade. " + tableName + " WHERE saxo_userid = ? AND account_id = ? ";
@@ -209,23 +217,46 @@ public int getAccountCount(ClientAccount account,String tableName) {
 	return cnt;
 }
 
-public int getSaxoClientDataCount(String saxoUserId,String server,String tableName) {
+public int getSaxoClientDataCount(String saxoUserId, String server, String tableName, String accountId, String sharenetUsername) {
 	
 	int cnt = 0;
-	String sql = "SELECT count(*) FROM trade." + tableName + " WHERE saxo_userid = ? AND server = ?";
-	try {
-		if(psSaxoClientDataCount == null)
-			psSaxoClientDataCount = conn.prepareStatement(sql);
+	String sql = "SELECT COUNT(*) FROM trade." + tableName + " WHERE saxo_userid = ? AND server = ? AND account_id = ? AND sn_login = ?";
+	try (PreparedStatement ps = conn.prepareStatement(sql)) {
 		
-		psSaxoClientDataCount.setString(1, saxoUserId);
-		psSaxoClientDataCount.setString(2, server);
-		ResultSet rs= psSaxoClientDataCount.executeQuery();
+		ps.setString(1, saxoUserId);
+		ps.setString(2, server);
+		ps.setString(3, accountId);
+		ps.setString(4, sharenetUsername);
+		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
 			cnt = rs.getInt(1);
 		}
 		rs.close();
 	}catch(Exception e) {e.printStackTrace();}
-	
+
+	return cnt;
+}
+
+public int getSaxoClientDataCount1(String saxoUserId, String server, String tableName, String accountId) {
+
+	int cnt = 0;
+	String sql = "SELECT COUNT(*) FROM trade." + tableName + " WHERE saxo_userid = ? AND server = ? AND account_id = ? ";
+	try {
+		if (psSaxoClientDataCount == null)
+			psSaxoClientDataCount = conn.prepareStatement(sql);
+
+		psSaxoClientDataCount.setString(1, saxoUserId);
+		psSaxoClientDataCount.setString(2, server);
+		psSaxoClientDataCount.setString(3, accountId);
+		ResultSet rs = psSaxoClientDataCount.executeQuery();
+		while (rs.next()) {
+			cnt = rs.getInt(1);
+		}
+		rs.close();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
 	return cnt;
 }
 

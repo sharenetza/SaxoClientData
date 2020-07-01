@@ -27,9 +27,22 @@ public class SaxoClientData implements EventsInterface{
 		
 		listeners.add(ei);
 	}
+
+	public void getAllClientKeysBatch(String login, String accountType) {
+	    AllClients allClients = new AllClients(this, props);
+	    String cookie = jdbc.getCookie("port");
+	    allClients.getAllClientKeysBatch(jdbc.getToken(login), cookie, accountType, login);
+		getAllAccounts(login, accountType);
+	}
+
+	public void getAllClients2(String login, String accountType) {
+		AllClients allClients = new AllClients(this, props);
+		String cookie = jdbc.getCookie("cs");
+		allClients.getAllClientsV3(jdbc.getToken(login), cookie, accountType, login);
+	}
 	
 	public void getAllClients(String login,String accountType) {
-		SaxoClientsAllClients allClients = new SaxoClientsAllClients(this,props);
+		AllClients allClients = new AllClients(this,props);
 		String cookie = jdbc.getCookie("port");
 		allClients.getAllClientKeysV2(jdbc.getToken(login),cookie,accountType,login);
 	}
@@ -65,13 +78,13 @@ public class SaxoClientData implements EventsInterface{
 		System.out.println("Fetching All Accounts");
 		//Instant start = Instant.now();
 		Timer.start();
-		SaxoClientsAllClients allClients = new SaxoClientsAllClients(this,props);
+		AllClients allClients = new AllClients(this,props);
 		String cookie = jdbc.getCookie("port");
 		int cnt = 0;
 		for(SaxoClientDataObj counterpart : counterPartsList) {
 			ArrayList<ClientAccount> accountList = allClients.getAccounts(counterpart.getSaxoClientKey(),
 					jdbc.getToken(login), cookie, server);
-			if(accountList.size() > 1 ) {
+			if (accountList != null && accountList.size() > 1) {
 				System.out.println(accountList.size() + " accounts found for " + counterpart.getSaxoUserId() + " " + counterpart.getClientName() );
 				for(ClientAccount account : accountList) {
 					if(account.getAccountId().contains("ERROR") ||
@@ -82,7 +95,7 @@ public class SaxoClientData implements EventsInterface{
 						System.out.println("Valid Multiple Account Found:" + account.getAccountId());
 						counterpart.setDefaultAccountId(account.getAccountId());
 						counterpart.setDefaultAccountKey(account.getAccountKey());
-						if(getJDBC().getAccountCount(account,props.getClientDataTableName()) == 0) {
+						if (getJDBC().getAccountCount(account, props.getClientDataTableName()) == 0) {
 							System.out.println("Inserting account:" + counterpart.getDefaultAccountId() + " House:" +counterpart.getHouseId() );
 							getJDBC().insertSaxoClientData(counterpart, server, counterpart.getHouseId(),
 									props.getClientDataTableName());
@@ -110,15 +123,18 @@ public class SaxoClientData implements EventsInterface{
 		        between.toHours(), between.toMinutes(), between.getSeconds(), between.toMillis());*/
 	}
 	
-	public void loadCLientData(String login,String accountType) {
+	public void loadClientData(String login,String accountType) {
 		System.out.println("Loading Data for:" + login);
 		Timer.start();
-		getAllClients(login,accountType);
+		// getAllClients(login, accountType);
+		// getAllClients2(login, accountType);
+		getAllClientKeysBatch(login, accountType);
 		Timer.stop();
-		Timer.print();
-		System.out.println("DONE - COUNTERPARTS");
-		getAllAccounts(login,accountType);
-		System.out.println("DONE - ACCOUNTS");
+		//Timer.print();
+		/*
+		 * System.out.println("DONE - COUNTERPARTS"); getAllAccounts(login,accountType);
+		 * System.out.println("DONE - ACCOUNTS");
+		 */
 		
 		
 		
@@ -126,20 +142,21 @@ public class SaxoClientData implements EventsInterface{
 	
 	public static void main(String[] arg) {
 		
-		
+	    // LOCAL//
 
-		//LOCAL//
+		// System.out.println("Fetching LOCAL accounts"); // SaxoClientData
+			SaxoClientData clientData = new SaxoClientData(); //
+			clientData.loadClientData(clientData.props.getSharenetHomeLogin(), "LIVE");
+			// System.out.println("Fetching LOCAL accounts - DONE");
 
-		System.out.println("Fetching LOCAL accounts");
-		SaxoClientData clientData = new SaxoClientData();
-		clientData.loadCLientData(clientData.props.getSharenetHomeLogin(), "LIVE");
-		System.out.println("Fetching LOCAL accounts - DONE");
+		// OFFSHORE
 
-		//OFFSHORE
 		System.out.println("Fetching OFFSHORE accounts");
 		SaxoClientData clientDataOffshore = new SaxoClientData();
-		clientDataOffshore.loadCLientData(clientDataOffshore.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE");
+		clientDataOffshore = new SaxoClientData();
+		clientDataOffshore.loadClientData(clientDataOffshore.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE");
 		System.out.println("Fetching OFFSHORE accounts - DONE");
+
 	}
 }
 

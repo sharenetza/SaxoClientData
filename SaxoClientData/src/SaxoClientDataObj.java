@@ -1,5 +1,5 @@
 
-public class SaxoClientDataObj {
+public class SaxoClientDataObj implements Cloneable {
 	
 	private String sharenetLogin;
 	private String saxoUserId; //BDA nacc
@@ -15,6 +15,14 @@ public class SaxoClientDataObj {
 	private boolean house;
 	
 	
+	@Override
+	public SaxoClientDataObj clone() {
+		try {
+			return (SaxoClientDataObj) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return new SaxoClientDataObj();
+		}
+	}
 	
 	/*public SaxoClientOwner getAccount() {
 		return account;

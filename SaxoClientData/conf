@@ -1,7 +1,7 @@
 oracleUser=snet
 oraclePass=starnet1
-oracleSid=p4
-oracleHost=p4.sharenet.co.za
+oracleSid=td5
+oracleHost=td5.sharenet.co.za
 sleepTime=1
 restServerPort=8111
 
@@ -17,7 +17,7 @@ sharenetHomeOFFSHORESaxoLogin=saxoOFFSHORE
 
 bcode=68
 offshoreBcode=69
-debugShowResponse=true
+debugShowResponse=false
 server=LIVE
 serverOffshore=OFFSHORE
 clientDataTableName=saxo_client_data

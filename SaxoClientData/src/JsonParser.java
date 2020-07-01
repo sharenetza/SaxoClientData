@@ -33,6 +33,8 @@ public class JsonParser {
 
 		ArrayList<ClientAccount> accList = new ArrayList<ClientAccount>();
 		try {
+			if (json == null || !json.containsKey("Data"))
+				return null;
 		JsonArray array = json.getJsonArray("Data");
 		for(int i = 0;i < array.size();i++) {
 			JsonObject o = array.getJsonObject(i);
