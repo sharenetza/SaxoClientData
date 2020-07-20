@@ -47,14 +47,13 @@ public String getToken(String login) {
 		String currency = null;
 
 		String sql = "SELECT currency FROM trade." + tableName
-				+ " WHERE saxo_userid = ? AND server = ? AND account_id = ? AND (sn_login = ? OR sn_login is null)";
+				+ " WHERE saxo_userid = ? AND server = ?  AND (sn_login = ? OR sn_login is null) and currency is not null";
 		try {
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, client.getSaxoUserId());
 			ps.setString(2, server);
-			ps.setString(3, client.getDefaultAccountId());
-			ps.setString(4, client.getSharenetLogin());
+			ps.setString(3, client.getSharenetLogin());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				currency = rs.getString(1);
