@@ -1,7 +1,7 @@
 oracleUser=snet
 oraclePass=starnet1
-oracleSid=td5
-oracleHost=td5.sharenet.co.za
+oracleSid=p4
+oracleHost=p4.sharenet.co.za
 sleepTime=1
 restServerPort=8111
 

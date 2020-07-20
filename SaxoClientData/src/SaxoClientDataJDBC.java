@@ -42,14 +42,39 @@ public String getToken(String login) {
 	}
 
 
+	public String getDefaultCurrency(SaxoClientDataObj client, String server, String houseId, String tableName) {
 
+		String currency = null;
+
+		String sql = "SELECT currency FROM trade." + tableName
+				+ " WHERE saxo_userid = ? AND server = ? AND account_id = ? AND (sn_login = ? OR sn_login is null)";
+		try {
+
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, client.getSaxoUserId());
+			ps.setString(2, server);
+			ps.setString(3, client.getDefaultAccountId());
+			ps.setString(4, client.getSharenetLogin());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				currency = rs.getString(1);
+			}
+			rs.close();
+			ps.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return currency;
+	}
 
 
 public int updateSaxoClientData(SaxoClientDataObj client,String server,String houseId,String tableName) {
 	//if(houseId != null &&houseId.length() > 0)
 			System.out.println("Updating Client:" + client.getClientName() + " houseId:" + houseId + " saxoId:"
 					+ client.getSaxoUserId() + " snusername:" + client.getSharenetLogin() + " table:" + tableName
-					+ " server:" + server + " accountId:" + client.getDefaultAccountId());
+					+ " server:" + server + " accountId:" + client.getDefaultAccountId() + " Currency:" + client.getDefaultCurrency());
 
 	//client.print();
 	int cnt = 0;
@@ -67,7 +92,11 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 		psSaxoClientDataUpdate.setString(4, client.getSaxoClientKey());
 		psSaxoClientDataUpdate.setString(5, client.getDefaultAccountId());
 		psSaxoClientDataUpdate.setString(6, client.getDefaultAccountKey());
-		psSaxoClientDataUpdate.setString(7, client.getDefaultCurrency());
+		String currency = getDefaultCurrency(client, server, houseId, tableName);
+		if (currency != null)
+			psSaxoClientDataUpdate.setString(7, currency);
+		else
+			psSaxoClientDataUpdate.setString(7, client.getDefaultCurrency());
 		psSaxoClientDataUpdate.setString(8, houseId);
 		psSaxoClientDataUpdate.setString(9, client.getSaxoUserId());
 		psSaxoClientDataUpdate.setString(10, server);

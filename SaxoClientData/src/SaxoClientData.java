@@ -144,10 +144,10 @@ public class SaxoClientData implements EventsInterface{
 		
 	    // LOCAL//
 
-		// System.out.println("Fetching LOCAL accounts"); // SaxoClientData
-			SaxoClientData clientData = new SaxoClientData(); //
-			clientData.loadClientData(clientData.props.getSharenetHomeLogin(), "LIVE");
-			// System.out.println("Fetching LOCAL accounts - DONE");
+		System.out.println("Fetching LOCAL accounts"); // SaxoClientData
+		SaxoClientData clientData = new SaxoClientData(); //
+		clientData.loadClientData(clientData.props.getSharenetHomeLogin(), "LIVE");
+		System.out.println("Fetching LOCAL accounts - DONE");
 
 		// OFFSHORE
 
