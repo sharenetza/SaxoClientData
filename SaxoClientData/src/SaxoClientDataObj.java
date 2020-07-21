@@ -15,6 +15,7 @@ public class SaxoClientDataObj implements Cloneable {
 	private boolean house;
 	
 	
+
 	@Override
 	public SaxoClientDataObj clone() {
 		try {

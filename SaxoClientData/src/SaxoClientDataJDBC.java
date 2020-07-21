@@ -8,6 +8,7 @@ public class SaxoClientDataJDBC {
 
 	
 	
+
 	private Connection conn;
 	private PreparedStatement psCookie;
 	private PreparedStatement psFetchSaxoClient;

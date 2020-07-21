@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 
 
-public class AllClients {
+public class SaxoAllClients {
 	
 	SaxoClientData saxoClientData;
 	
@@ -30,7 +30,7 @@ public class AllClients {
 	PropsSaxoCD props;
 	
 	
-	AllClients(SaxoClientData saxoClientData,PropsSaxoCD props ){
+	SaxoAllClients(SaxoClientData saxoClientData,PropsSaxoCD props ){
 		this.saxoClientData = saxoClientData;
 		this.props = props;
 		
