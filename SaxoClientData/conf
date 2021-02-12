@@ -17,7 +17,7 @@ sharenetHomeOFFSHORESaxoLogin=saxoOFFSHORE
 
 bcode=68
 offshoreBcode=69
-debugShowResponse=false
+debugShowResponse=true
 server=LIVE
 serverOffshore=OFFSHORE
 clientDataTableName=saxo_client_data

@@ -53,7 +53,7 @@ public class SaxoAllClients {
 		
 		String params = URLEncoder.encode("clients/?OwnerKey="  +  ownerId + "&IncludeSubUsers=true","UTF-8");
 		endPoint = endPoint + params;
-
+		//endPoint = "https://gateway.saxobank.com/openapi/port/v1/clients/?OwnerKey=1k2JWwF%7CmtJaz74vacD3Pw==&IncludeSubUsers=true";
 		Client client = ClientBuilder.newClient();
 		//System.out.println("DEBUG:" + props.isDebugShowResponse() );
 		if(props.isDebugShowResponse()) {
@@ -77,7 +77,14 @@ public class SaxoAllClients {
 			   
 			//return new AllClientResponse(AllClientResponse.STATUS_INVALID_TOKEN);  
 		 }
+
 		JsonObject jo = response.readEntity(JsonObject.class);
+		if (ownerId.contentEquals("1k2JWwF|mtJaz74vacD3Pw==")) {
+			System.out.println("JHB-RESPONSE:" + response.toString());
+			System.out.println(jo);
+			//System.exit(0);
+
+		}
 		//System.out.println(jo.toString());
 		
 		//////////////////////////////////////////////////////////
@@ -172,6 +179,7 @@ public class SaxoAllClients {
 			System.out.println(response.getEntity().toString());
 
 		JsonObject jo = response.readEntity(JsonObject.class);
+		System.out.println("JO:" + jo.toString());
 		sharenetHomeClientKey = jo.getString("ClientKey");
 		// sharenetHomeClientKey = "I4gmXdPxtNIbh6v-XetomA==";
 		SaxoClientData.sharenetHouseKey = sharenetHomeClientKey;
@@ -372,8 +380,10 @@ public class SaxoAllClients {
 	     */
 
 	    for (SaxoClientDataObj cl : clientList) {
-			if (cl.getClientName().contentEquals("Kirstin Louise Gordon"))
+			if (cl.getClientName().contentEquals("Donald Frederick Prior")) {
 			System.out.println("Fetching Sub CounterParts For:" + cl.getClientName() + " AccountId:" + cl.getDefaultAccountId());
+			//System.exit(0);
+			}
 
 		int i = getAllSubCounterParts(token, cookie, server, cl.getSaxoClientKey(), accountType);
 
@@ -415,10 +425,14 @@ public class SaxoAllClients {
 			bcode = 69;
 
 		for (SaxoClientDataObj c : clientList) {
-			//System.out.println("SettingSharenetFields for account:" + c.getSaxoClientKey() + " bcode:" + bcode);
+			System.out.println("SettingSharenetFields for account:" + c.getSaxoUserId() + " bcode:" + bcode);
+			if (c.getSaxoUserId().contentEquals("9012639")) {
+				//System.out.println("Prior found - exiting");
+				//System.exit(0);
+			}
 
 
-				System.out.println("SHARENET-LIVEACCOUNT FOUND");
+			//System.out.println("SHARENET-LIVEACCOUNT FOUND");
 				List<SaxoClientDataObj> list = saxoClientData.getJDBC().setSharenetFields(c, bcode);
 				for (SaxoClientDataObj o : list) {
 					if (c.getSaxoUserId().contentEquals("8551699")) {
@@ -482,7 +496,7 @@ public class SaxoAllClients {
 		String params = "accounts/?clientkey=" + URLEncoder.encode(clientKey,"UTF-8");
 		String endPoint = baseApi + params;
 		
-			System.out.println("Fetching Sharenet ClientKey using EndPoint:" + endPoint);
+		//System.out.println("Fetching Sharenet ClientKey using EndPoint:" + endPoint);
 		Client client = ClientBuilder.newClient();
 		//System.out.println("DEBUG:" + props.isDebugShowResponse() );
 		if(props.isDebugShowResponse()) {
@@ -568,6 +582,7 @@ public class SaxoAllClients {
 			cd.setSaxoUserId(as.getClientId());
 			cd.setHouseId("NxuCl4a1PmfI0LkXANLRdQ==");
 			cd.setDefaultCurrency("ZAR");
+			cd.setLegalAssetTypes(as.getLegalAssetTypes());
 			dbList.add(cd);
 			// cd.getDefaultCurrency(as.get
 
@@ -595,11 +610,11 @@ public class SaxoAllClients {
 	    String cookieValue = cookie.substring(cookInt + 1, cookie.length());
 	    invHeader.cookie(cookieName, cookieValue);
 
-	    String accountToLink = "\"8064491\"";
+		String accountToLink = "\"9012639\"";
 
-	    String json = "{ \"AccountId\": \"68400/TRADSHS\", \"AccountKey\": \"I4gmXdPxtNIbh6v-XetomA==\", \"ClientId\": \"8249456\", \"ClientKey\": \"NxuCl4a1PmfI0LkXANLRdQ==\",  \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"8249456\" }";
-	    String json2 = "{ \"AccountId\": \"68400/TRADSHS\",    \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"8249456\" }";
-	    String json3 = "{     \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"10459269\" }";
+		// String json = "{ \"AccountId\": \"68400/TRADSHS\", \"AccountKey\": \"I4gmXdPxtNIbh6v-XetomA==\", \"ClientId\": \"8249456\", \"ClientKey\": \"NxuCl4a1PmfI0LkXANLRdQ==\",  \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"8249456\" }";
+		// String json2 = "{ \"AccountId\": \"68400/TRADSHS\",    \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"8249456\" }";
+		// String json3 = "{     \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"10459269\" }";
 	    String json4 = "{     \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": " + accountToLink
 		    + " }";
 
@@ -630,6 +645,7 @@ public class SaxoAllClients {
 		cd.setSaxoUserId(as.getClientId());
 		cd.setHouseId("NxuCl4a1PmfI0LkXANLRdQ==");
 		cd.setDefaultCurrency("ZAR");
+		cd.setLegalAssetTypes(as.getLegalAssetTypes());
 		dbList.add(cd);
 		// cd.getDefaultCurrency(as.get
 

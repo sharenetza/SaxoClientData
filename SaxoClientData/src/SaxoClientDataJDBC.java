@@ -26,7 +26,7 @@ public class SaxoClientDataJDBC {
 public String getToken(String login) {
 		
 		String token = null;
-		String sql = "SELECT access_token FROM trade.saxo_token WHERE login = ? ";
+		String sql = "SELECT access_token FROM trade.saxo_token@uu3 WHERE login = ? ";
 		try {
 		PreparedStatement ps = conn.prepareStatement(sql);
 			
@@ -72,6 +72,7 @@ public String getToken(String login) {
 
 public int updateSaxoClientData(SaxoClientDataObj client,String server,String houseId,String tableName) {
 	//if(houseId != null &&houseId.length() > 0)
+	if (client.getSharenetLogin().contentEquals("kgordon01"))
 			System.out.println("Updating Client:" + client.getClientName() + " houseId:" + houseId + " saxoId:"
 					+ client.getSaxoUserId() + " snusername:" + client.getSharenetLogin() + " table:" + tableName
 					+ " server:" + server + " accountId:" + client.getDefaultAccountId() + " Currency:" + client.getDefaultCurrency());
@@ -79,7 +80,7 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 	//client.print();
 	int cnt = 0;
 	String sql = "UPDATE trade." + tableName  + "  SET sn_login = ?, saxo_userid = ?, saxo_name = ?,"
-			+ " saxo_client_key = ?,last_update = sysdate ,  account_id = ?, account_key = ?,currency = ?, houseid = ? "
+			+ " saxo_client_key = ?,last_update = sysdate ,  account_id = ?, account_key = ?,currency = ?, houseid = ? , legal_asset_type = ?"
 			+ "WHERE saxo_userid = ? AND server = ? AND account_id = ? AND (sn_login = ? OR sn_login is null)";
 	try {
 		
@@ -92,16 +93,20 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 		psSaxoClientDataUpdate.setString(4, client.getSaxoClientKey());
 		psSaxoClientDataUpdate.setString(5, client.getDefaultAccountId());
 		psSaxoClientDataUpdate.setString(6, client.getDefaultAccountKey());
-		String currency = getDefaultCurrency(client, server, houseId, tableName);
+		String currency = client.getDefaultCurrency();
+		if (currency == null)
+			currency = client.getAccountCurrency();
+		//getDefaultCurrency(client, server, houseId, tableName);
 		if (currency != null)
 			psSaxoClientDataUpdate.setString(7, currency);
 		else
 			psSaxoClientDataUpdate.setString(7, client.getDefaultCurrency());
 		psSaxoClientDataUpdate.setString(8, houseId);
-		psSaxoClientDataUpdate.setString(9, client.getSaxoUserId());
-		psSaxoClientDataUpdate.setString(10, server);
-		psSaxoClientDataUpdate.setString(11, client.getDefaultAccountId());
-		psSaxoClientDataUpdate.setString(12, client.getSharenetLogin());
+		psSaxoClientDataUpdate.setString(9, client.getLegalAssetTypes());
+		psSaxoClientDataUpdate.setString(10, client.getSaxoUserId());
+		psSaxoClientDataUpdate.setString(11, server);
+		psSaxoClientDataUpdate.setString(12, client.getDefaultAccountId());
+		psSaxoClientDataUpdate.setString(13, client.getSharenetLogin());
 		
 		
 		cnt = psSaxoClientDataUpdate.executeUpdate();
@@ -136,7 +141,7 @@ public List<SaxoClientDataObj> setSharenetFields(SaxoClientDataObj client, int b
 
 	List<SaxoClientDataObj> list = new ArrayList<SaxoClientDataObj>();
 
-	System.out.println("SharenetFields: BCODE:" + bcode + " Nacc:" + client.getSaxoUserId());
+	//System.out.println("SharenetFields: BCODE:" + bcode + " Nacc:" + client.getSaxoUserId());
 	String sql = "SELECT login,uidn FROM trade.user_accs WHERE bcode = ? AND nacc = ? ";
 	/*if(client.getSaxoUserId().equals("8918783")) {
 		System.out.println(sql + " " + client.getSaxoUserId() + " " + bcode);
@@ -151,8 +156,8 @@ public List<SaxoClientDataObj> setSharenetFields(SaxoClientDataObj client, int b
 		while(rs.next()) {
 			SaxoClientDataObj o = client.clone();
 			o.setSharenetLogin(rs.getString("LOGIN"));
-			System.out.println("Setting LOGIN: " + rs.getString("LOGIN") + " saxoid:" + client.getSaxoUserId() + " bcode:" + bcode + " uidn:"
-					+ rs.getLong("UIDN"));
+			//System.out.println("Setting LOGIN: " + rs.getString("LOGIN") + " saxoid:" + client.getSaxoUserId() + " bcode:" + bcode + " uidn:"
+			//		+ rs.getLong("UIDN"));
 			o.setSharenetUidn(rs.getLong("UIDN"));
 			list.add(o);
 			if (client.getSaxoUserId().contentEquals("8551699"))
@@ -196,8 +201,7 @@ public int insertSaxoClientData(SaxoClientDataObj client,String server,String ow
 	
 	int cnt = 0;
 	String sql = "INSERT INTO trade." + tableName + " (sn_login,saxo_userid,saxo_name,saxo_client_key,sn_client_uidn,cdate,last_update,server,"
-			+ "account_id,account_key,currency,houseid) " +
-			"VALUES(?,?,?,?,?,sysdate,sysdate,?,?,?,?,?)";
+			+ "account_id,account_key,currency,houseid,legal_asset_type) " + "VALUES(?,?,?,?,?,sysdate,sysdate,?,?,?,?,?,?)";
 	try {
 		if(psSaxoClientDataInsert == null)
 			psSaxoClientDataInsert = conn.prepareStatement(sql);
@@ -214,8 +218,11 @@ public int insertSaxoClientData(SaxoClientDataObj client,String server,String ow
 		psSaxoClientDataInsert.setString(8, client.getDefaultAccountKey());
 		psSaxoClientDataInsert.setString(9, client.getDefaultCurrency());
 		psSaxoClientDataInsert.setString(10, ownerId);
+		psSaxoClientDataInsert.setString(11, client.getLegalAssetTypes());
+		System.out.println("Insert SaxoClientData:" + client.getLegalAssetTypes());
 		
 		
+
 		cnt = psSaxoClientDataInsert.executeUpdate();
 		conn.commit();
 		
@@ -241,8 +248,8 @@ public int getAccountCount(ClientAccount account, String tableName) {
 		rs.close();
 		
 	}catch(Exception e) {e.printStackTrace();}
-		System.out.println("Getting AccountID Count: " + account.getAccountId() + " SaxoUserId:" + account.getClientId()
-				+ " Count:" + cnt);
+	/*System.out.println("Getting AccountID Count: " + account.getAccountId() + " SaxoUserId:" + account.getClientId()
+			+ " Count:" + cnt);*/
 	return cnt;
 }
 
@@ -318,7 +325,7 @@ public String getSharenetHouseID(String saxoUserId,String server,String tableNam
 	
 		System.out.println("Fetching ALL Counterparts");
 		ArrayList<SaxoClientDataObj> allCounterpartList = new ArrayList<SaxoClientDataObj>();
-		String sql = "SELECT * FROM trade." + tableName + " WHERE server = ?";
+		String sql = "SELECT * FROM trade." + tableName + " WHERE server = ?  and saxo_userid=9012639";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, server);

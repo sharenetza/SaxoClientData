@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class SaxoClientDataObj implements Cloneable {
 	
@@ -13,8 +14,25 @@ public class SaxoClientDataObj implements Cloneable {
 	private String clientName;
 	private String houseId;
 	private boolean house;
+	private String accountCurrency;
+	private List<String> legalAssetTypes;
 	
 	
+	public String getLegalAssetTypes() {
+
+		return String.join(",", legalAssetTypes);
+	}
+
+	public void setLegalAssetTypes(List<String> legalAssetTypes) {
+		this.legalAssetTypes = legalAssetTypes;
+	}
+	public String getAccountCurrency() {
+		return accountCurrency;
+	}
+
+	public void setAccountCurrency(String accountCurrency) {
+		this.accountCurrency = accountCurrency;
+	}
 
 	@Override
 	public SaxoClientDataObj clone() {

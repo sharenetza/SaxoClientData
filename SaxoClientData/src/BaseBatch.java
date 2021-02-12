@@ -22,6 +22,7 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
+import za.co.sharenet.snbasic.Oracle;
 
 public class BaseBatch {
 

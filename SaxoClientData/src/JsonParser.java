@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -50,6 +51,7 @@ public class JsonParser {
 			acc.setClientId(o.getString("ClientId"));
 			acc.setClientKey(o.getString("ClientKey"));
 			acc.setCurrency(o.getString("Currency"));
+
 			if(o.containsKey("DisplayName"))
 				acc.setDisplayName(o.getString("DisplayName"));
 			//acc.print();
@@ -89,7 +91,8 @@ public class JsonParser {
 		 JsonArray array = json.getJsonArray("Data");
 		 for(int i = 0;i < array.size();i++) {
 				JsonObject o = array.getJsonObject(i);
-				//System.out.println("ParsingAccount:" + o);
+				System.out.println("ParsingAccount:" + o);
+				//System.exit(0);
 				SaxoClientDataObj owner = new SaxoClientDataObj();
 				owner.setSaxoUserId(o.getString("ClientId"));
 				owner.setSaxoClientKey(o.getString("ClientKey"));
@@ -97,7 +100,16 @@ public class JsonParser {
 				owner.setDefaultAccountId(o.getString("DefaultAccountId"));
 				owner.setDefaultAccountKey(o.getString("DefaultAccountKey"));
 				owner.setDefaultCurrency(o.getString("DefaultCurrency"));
+
+				JsonArray ja = o.getJsonArray("LegalAssetTypes");
+				List<String> assetTypes = new ArrayList<String>();
+				for (int ii = 0; ii < ja.size(); ii++) {
+					assetTypes.add(ja.getString(ii));
+				}
+
+				owner.setLegalAssetTypes(assetTypes);
 				ownerList.add(owner);
+
 		 }
 		 
 		 

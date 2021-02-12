@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 import java.util.Date;
 
+import za.co.sharenet.snbasic.Oracle;
+import za.co.sharenet.snbasic.PropsSN;
+
 public class SaxoClientData implements EventsInterface{
 	
 	private SaxoClientDataJDBC jdbc;
-	private final double version = 1.2;
+	private final double version = 1.3;
 	PropsSaxoCD props;
 	public static ArrayList<EventsInterface> listeners = new ArrayList<EventsInterface>();
 	public static String sharenetHouseKey;
@@ -82,9 +85,20 @@ public class SaxoClientData implements EventsInterface{
 		String cookie = jdbc.getCookie("port");
 		int cnt = 0;
 		for(SaxoClientDataObj counterpart : counterPartsList) {
+			if (counterpart.getSaxoUserId().contentEquals("9012639")) {
+				System.out.println("Prior 1");
+			}
 			ArrayList<ClientAccount> accountList = allClients.getAccounts(counterpart.getSaxoClientKey(),
 					jdbc.getToken(login), cookie, server);
+			if (counterpart.getSaxoUserId().contentEquals("9012639")) {
+				System.out.println("Prior 2");
+			}
+
 			if (accountList != null && accountList.size() > 1) {
+				if (counterpart.getSaxoUserId().contentEquals("9012639")) {
+					System.out.println("Prior 3");
+					//System.exit(0);
+				}
 				System.out.println(accountList.size() + " accounts found for " + counterpart.getSaxoUserId() + " " + counterpart.getClientName() );
 				for(ClientAccount account : accountList) {
 					if(account.getAccountId().contains("ERROR") ||
@@ -92,16 +106,21 @@ public class SaxoClientData implements EventsInterface{
 							account.getAccountId().contains("COMM") ||
 							account.getAccountId().contains("INT") ) continue;
 					else {
-						System.out.println("Valid Multiple Account Found:" + account.getAccountId());
+
+						//System.out.println("Valid Multiple Account Found:" + account.getAccountId());
 						counterpart.setDefaultAccountId(account.getAccountId());
 						counterpart.setDefaultAccountKey(account.getAccountKey());
+						counterpart.setAccountCurrency(account.getCurrency());
+
 						if (getJDBC().getAccountCount(account, props.getClientDataTableName()) == 0) {
 							System.out.println("Inserting account:" + counterpart.getDefaultAccountId() + " House:" +counterpart.getHouseId() );
 							getJDBC().insertSaxoClientData(counterpart, server, counterpart.getHouseId(),
 									props.getClientDataTableName());
 						}
 						else {
-							System.out.println("Updating Account: " + counterpart.getSaxoUserId());
+							if (counterpart.getSharenetLogin() != null && counterpart.getSharenetLogin().contentEquals("kgordon01"))
+								System.out.println("Updating Account: " + counterpart.getSaxoUserId() + counterpart.getDefaultAccountId() + " "
+										+ counterpart.getDefaultCurrency());
 							if (counterpart.getSharenetLogin() != null)
 								getJDBC().updateSaxoClientData(counterpart, server, counterpart.getHouseId(),
 									props.getClientDataTableName());
@@ -140,8 +159,23 @@ public class SaxoClientData implements EventsInterface{
 		
 	}
 	
+	public void getOneClient(SaxoClientData sx, String login, String accountType, String server) {
+		SaxoClientData clientData = new SaxoClientData();
+		SaxoAllClients oneClient = new SaxoAllClients(sx, clientData.props);
+		 String cookie = jdbc.getCookie("port");
+		 String token = jdbc.getToken(login);
+		 
+		oneClient.getOneClient(token, cookie, server, accountType);
+	}
+
 	public static void main(String[] arg) {
 		
+		//ONE CLIENT
+		//SaxoClientData sx = new SaxoClientData();
+		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE");
+		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE");
+		//System.exit(0);
+
 	    // LOCAL//
 
 		System.out.println("Fetching LOCAL accounts"); // SaxoClientData
