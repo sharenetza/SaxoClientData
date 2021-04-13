@@ -184,6 +184,7 @@ public class SaxoAllClients {
 		// sharenetHomeClientKey = "I4gmXdPxtNIbh6v-XetomA==";
 		SaxoClientData.sharenetHouseKey = sharenetHomeClientKey;
 		
+
 		/**
 		 * 
 		 * FETCH DEFAULT CLIENT KEYS- THIS WILL RETURN COUNTERPARTS AND HOUSES
@@ -592,7 +593,7 @@ public class SaxoAllClients {
 
 	}
 
-	public void getOneClient(String token, String cookie, String server, String accountType) {
+	public void getOneClient(String token, String cookie, String server, String accountType, String account) {
 	    String baseApi = "https://gateway.saxobank.com/openapi/cs/v2/";
 	    String endPoint = baseApi + "clientinfo/clients/search/?includeSubUsers=true";
 	    Client client = ClientBuilder.newClient();
@@ -610,7 +611,7 @@ public class SaxoAllClients {
 	    String cookieValue = cookie.substring(cookInt + 1, cookie.length());
 	    invHeader.cookie(cookieName, cookieValue);
 
-		String accountToLink = "\"9012639\"";
+		String accountToLink = "\"" + account + "\"";
 
 		// String json = "{ \"AccountId\": \"68400/TRADSHS\", \"AccountKey\": \"I4gmXdPxtNIbh6v-XetomA==\", \"ClientId\": \"8249456\", \"ClientKey\": \"NxuCl4a1PmfI0LkXANLRdQ==\",  \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"8249456\" }";
 		// String json2 = "{ \"AccountId\": \"68400/TRADSHS\",    \"FieldGroups\": [ \"Accounts\" ], \"Keywords\": \"\", \"UserId\": \"8249456\" }";
@@ -636,10 +637,13 @@ public class SaxoAllClients {
 	    System.out.println("Count:" + resp.getCount());
 	    List<AccountSummary> acc = resp.getData();
 	    for (AccountSummary as : acc) {
-		SaxoClientDataObj cd = new SaxoClientDataObj();
+
+			for (Account ac : as.getAccounts()) {
+
+				SaxoClientDataObj cd = new SaxoClientDataObj();
 		cd.setClientName(as.getName());
-		cd.setDefaultAccountId(as.getDefaultAccountId());
-		cd.setDefaultAccountKey(as.getDefaultAccountKey());
+		cd.setDefaultAccountId(ac.getAccountId());
+		cd.setDefaultAccountKey(ac.getAccountKey());
 		cd.setHouse(false);
 		cd.setSaxoClientKey(as.getClientKey());
 		cd.setSaxoUserId(as.getClientId());
@@ -647,6 +651,8 @@ public class SaxoAllClients {
 		cd.setDefaultCurrency("ZAR");
 		cd.setLegalAssetTypes(as.getLegalAssetTypes());
 		dbList.add(cd);
+	}
+
 		// cd.getDefaultCurrency(as.get
 
 		System.out.println(as.getClientKey());

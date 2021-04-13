@@ -159,20 +159,20 @@ public class SaxoClientData implements EventsInterface{
 		
 	}
 	
-	public void getOneClient(SaxoClientData sx, String login, String accountType, String server) {
+	public void getOneClient(SaxoClientData sx, String login, String accountType, String server, String account) {
 		SaxoClientData clientData = new SaxoClientData();
 		SaxoAllClients oneClient = new SaxoAllClients(sx, clientData.props);
 		 String cookie = jdbc.getCookie("port");
 		 String token = jdbc.getToken(login);
 		 
-		oneClient.getOneClient(token, cookie, server, accountType);
+			oneClient.getOneClient(token, cookie, server, accountType, account);
 	}
 
 	public static void main(String[] arg) {
 		
 		//ONE CLIENT
 		//SaxoClientData sx = new SaxoClientData();
-		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE");
+		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "8920813");
 		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE");
 		//System.exit(0);
 
