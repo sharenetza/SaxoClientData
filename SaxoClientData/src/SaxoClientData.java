@@ -171,10 +171,10 @@ public class SaxoClientData implements EventsInterface{
 	public static void main(String[] arg) {
 		
 		//ONE CLIENT
-		//SaxoClientData sx = new SaxoClientData();
-		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "8920813");
+		/*SaxoClientData sx = new SaxoClientData();
+		sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "13501491");
 		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE");
-		//System.exit(0);
+		System.exit(0);*/
 
 	    // LOCAL//
 
@@ -186,10 +186,10 @@ public class SaxoClientData implements EventsInterface{
 		// OFFSHORE
 
 		System.out.println("Fetching OFFSHORE accounts");
-		SaxoClientData clientDataOffshore = new SaxoClientData();
-		clientDataOffshore = new SaxoClientData();
-		clientDataOffshore.loadClientData(clientDataOffshore.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE");
-		System.out.println("Fetching OFFSHORE accounts - DONE");
+			SaxoClientData clientDataOffshore = new SaxoClientData();
+			clientDataOffshore = new SaxoClientData();
+			clientDataOffshore.loadClientData(clientDataOffshore.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE");
+			System.out.println("Fetching OFFSHORE accounts - DONE");
 
 	}
 }

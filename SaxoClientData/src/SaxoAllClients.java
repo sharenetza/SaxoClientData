@@ -436,7 +436,9 @@ public class SaxoAllClients {
 			//System.out.println("SHARENET-LIVEACCOUNT FOUND");
 				List<SaxoClientDataObj> list = saxoClientData.getJDBC().setSharenetFields(c, bcode);
 				for (SaxoClientDataObj o : list) {
-					if (c.getSaxoUserId().contentEquals("8551699")) {
+					if (c.getSaxoUserId().contentEquals("8551699") || c.getSaxoUserId().contentEquals("13501491")
+							|| c.getSaxoUserId().contentEquals("13501531") || c.getSaxoUserId().contentEquals("13514284")
+							|| c.getSaxoUserId().contentEquals("13514472")) {
 					if (saxoClientData.getJDBC().getSaxoClientDataCount(o.getSaxoUserId(), server, props.getClientDataTableName(),
 							o.getDefaultAccountId(), o.getSharenetLogin()) == 0) {
 

@@ -1,7 +1,7 @@
 oracleUser=snet
 oraclePass=starnet1
-oracleSid=nis07
-oracleHost=nis07.sharenet.co.za
+oracleSid=p4
+oracleHost=p4.sharenet.co.za
 sleepTime=1
 restServerPort=8111
 
