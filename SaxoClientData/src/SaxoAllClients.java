@@ -427,8 +427,8 @@ public class SaxoAllClients {
 
 		for (SaxoClientDataObj c : clientList) {
 			System.out.println("SettingSharenetFields for account:" + c.getSaxoUserId() + " bcode:" + bcode);
-			if (c.getSaxoUserId().contentEquals("9012639")) {
-				//System.out.println("Prior found - exiting");
+			if (c.getSaxoUserId().contentEquals("13131940")) {
+				System.out.println("Prior found - exiting");
 				//System.exit(0);
 			}
 

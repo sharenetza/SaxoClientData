@@ -80,8 +80,8 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 	//client.print();
 	int cnt = 0;
 	String sql = "UPDATE trade." + tableName  + "  SET sn_login = ?, saxo_userid = ?, saxo_name = ?,"
-			+ " saxo_client_key = ?,last_update = sysdate ,  account_id = ?, account_key = ?,currency = ?, houseid = ? , legal_asset_type = ?"
-			+ "WHERE saxo_userid = ? AND server = ? AND account_id = ? AND (sn_login = ? OR sn_login is null)";
+			+ " saxo_client_key = ?,last_update = sysdate ,  account_id = ?, account_key = ?,currency = ?, houseid = ? , legal_asset_type = ?, default_account = ?"
+			+ "WHERE saxo_userid = ? AND server = ? AND account_id = ? AND (sn_login = ? OR sn_login is null) ";
 	try {
 		
 		if(psSaxoClientDataUpdate == null )
@@ -103,12 +103,18 @@ public int updateSaxoClientData(SaxoClientDataObj client,String server,String ho
 			psSaxoClientDataUpdate.setString(7, client.getDefaultCurrency());
 		psSaxoClientDataUpdate.setString(8, houseId);
 		psSaxoClientDataUpdate.setString(9, client.getLegalAssetTypes());
-		psSaxoClientDataUpdate.setString(10, client.getSaxoUserId());
-		psSaxoClientDataUpdate.setString(11, server);
-		psSaxoClientDataUpdate.setString(12, client.getDefaultAccountId());
-		psSaxoClientDataUpdate.setString(13, client.getSharenetLogin());
+		if (client.isDefaultAcc())
+			psSaxoClientDataUpdate.setInt(10, 1);
+		else
+			psSaxoClientDataUpdate.setInt(10, 0);
+
+		psSaxoClientDataUpdate.setString(11, client.getSaxoUserId());
+		psSaxoClientDataUpdate.setString(12, server);
+		psSaxoClientDataUpdate.setString(13, client.getDefaultAccountId());
+		psSaxoClientDataUpdate.setString(14, client.getSharenetLogin());
 		
 		
+
 		cnt = psSaxoClientDataUpdate.executeUpdate();
 		conn.commit();
 		

@@ -85,7 +85,7 @@ public class SaxoClientData implements EventsInterface{
 		String cookie = jdbc.getCookie("port");
 		int cnt = 0;
 		for(SaxoClientDataObj counterpart : counterPartsList) {
-			if (counterpart.getSaxoUserId().contentEquals("9012639")) {
+			if (counterpart.getSaxoUserId().contentEquals("13131940")) {
 				System.out.println("Prior 1");
 			}
 			ArrayList<ClientAccount> accountList = allClients.getAccounts(counterpart.getSaxoClientKey(),
@@ -111,6 +111,10 @@ public class SaxoClientData implements EventsInterface{
 						counterpart.setDefaultAccountId(account.getAccountId());
 						counterpart.setDefaultAccountKey(account.getAccountKey());
 						counterpart.setAccountCurrency(account.getCurrency());
+						if (counterpart.getSaxoDefaultAcccount().contentEquals(account.getAccountId())) {
+							counterpart.setDefaultAcc(true);
+							
+						}
 
 						if (getJDBC().getAccountCount(account, props.getClientDataTableName()) == 0) {
 							System.out.println("Inserting account:" + counterpart.getDefaultAccountId() + " House:" +counterpart.getHouseId() );
@@ -171,10 +175,10 @@ public class SaxoClientData implements EventsInterface{
 	public static void main(String[] arg) {
 		
 		//ONE CLIENT
-		/*SaxoClientData sx = new SaxoClientData();
-		sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "13501491");
-		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE");
-		System.exit(0);*/
+		SaxoClientData sx = new SaxoClientData();
+		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "13501491");
+		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE", "13131940");
+		//System.exit(0);
 
 	    // LOCAL//
 

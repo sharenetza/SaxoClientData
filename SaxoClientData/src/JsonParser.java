@@ -98,6 +98,7 @@ public class JsonParser {
 				owner.setSaxoClientKey(o.getString("ClientKey"));
 				owner.setClientName(o.getString("Name"));
 				owner.setDefaultAccountId(o.getString("DefaultAccountId"));
+				owner.setSaxoDefaultAccount(o.getString("DefaultAccountId"));
 				owner.setDefaultAccountKey(o.getString("DefaultAccountKey"));
 				owner.setDefaultCurrency(o.getString("DefaultCurrency"));
 

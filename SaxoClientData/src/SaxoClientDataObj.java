@@ -16,8 +16,19 @@ public class SaxoClientDataObj implements Cloneable {
 	private boolean house;
 	private String accountCurrency;
 	private List<String> legalAssetTypes;
+	private String defaultSaxoAcc;
+	private boolean isDefaultAcc;
 	
 	
+	public void setDefaultAcc(boolean b) {
+		this.isDefaultAcc = b;
+	}
+	public boolean isDefaultAcc() {
+		if (defaultSaxoAcc.contentEquals(defaultAccountId))
+			return true;
+		return isDefaultAcc;
+	}
+
 	public String getLegalAssetTypes() {
 
 		return String.join(",", legalAssetTypes);
@@ -54,7 +65,17 @@ public class SaxoClientDataObj implements Cloneable {
 	}
 	public void setDefaultAccountId(String defaultAccountId) {
 		this.defaultAccountId = defaultAccountId;
+
 	}
+
+	public void setSaxoDefaultAccount(String nacc) {
+		this.defaultSaxoAcc = nacc;
+	}
+
+	public String getSaxoDefaultAcccount() {
+		return defaultSaxoAcc;
+	}
+
 	public String getDefaultAccountKey() {
 		return defaultAccountKey;
 	}
