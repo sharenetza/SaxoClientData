@@ -24,9 +24,14 @@ public class SaxoClientDataObj implements Cloneable {
 		this.isDefaultAcc = b;
 	}
 	public boolean isDefaultAcc() {
+
+			
+		if(defaultSaxoAcc == null)
+			return true;
 		if (defaultSaxoAcc.contentEquals(defaultAccountId))
 			return true;
-		return isDefaultAcc;
+		else
+			return false;
 	}
 
 	public String getLegalAssetTypes() {

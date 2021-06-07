@@ -13,6 +13,8 @@ public class PropsSaxoCD {
 	private String clientDataTableName;
 	private String sharenetHomeOFFSHORESaxoId;
 	private String sharenetHomeOFFSHORELogin;
+	private String sharenetHomeGLOBALSaxoId;
+	private String sharenetHomeGLOBALLogin;
 	
 	
 	void loadExtendedProps() {
@@ -35,12 +37,21 @@ public class PropsSaxoCD {
 			clientDataTableName = props.getProperty("clientDataTableName");
 			sharenetHomeOFFSHORELogin = props.getProperty("sharenetHomeOFFSHORESaxoLogin");
 			sharenetHomeOFFSHORESaxoId = props.getProperty("sharenetHomeOFFSHORESaxoId");
+			sharenetHomeGLOBALLogin = props.getProperty("sharenetHomeGLOBALSaxoLogin");
+			sharenetHomeGLOBALSaxoId = props.getProperty("sharenetHomeGLOBALSaxoId");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
+	public String getSharenetHomeGLOBALSaxoId() {
+		return sharenetHomeGLOBALSaxoId;
+	}
+
+	public String getSharenetHomeGLOBALLogin() {
+		return sharenetHomeGLOBALLogin;
+	}
 	public String getSharenetHomeOFFSHORESaxoId() {return sharenetHomeOFFSHORESaxoId;}
 	public String getSharenetHomeOFFSHORELogin() {return sharenetHomeOFFSHORELogin;}
 	

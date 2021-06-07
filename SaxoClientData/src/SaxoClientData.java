@@ -177,23 +177,32 @@ public class SaxoClientData implements EventsInterface{
 		//ONE CLIENT
 		SaxoClientData sx = new SaxoClientData();
 		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "13501491");
-		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE", "13131940");
-		//System.exit(0);
-
-	    // LOCAL//
-
-		System.out.println("Fetching LOCAL accounts"); // SaxoClientData
-		SaxoClientData clientData = new SaxoClientData(); //
-		clientData.loadClientData(clientData.props.getSharenetHomeLogin(), "LIVE");
-		System.out.println("Fetching LOCAL accounts - DONE");
-
-		// OFFSHORE
-
-		System.out.println("Fetching OFFSHORE accounts");
-			SaxoClientData clientDataOffshore = new SaxoClientData();
-			clientDataOffshore = new SaxoClientData();
-			clientDataOffshore.loadClientData(clientDataOffshore.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE");
-			System.out.println("Fetching OFFSHORE accounts - DONE");
+		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE", "13204882");
+		sx.getOneClient(sx, sx.props.getSharenetHomeGLOBALLogin(), "GLOBAL", "GLOBAL", "10101097");
+		System.exit(0);
+		/*
+		// LOCAL//
+		
+				System.out.println("Fetching LOCAL accounts"); // SaxoClientData
+				SaxoClientData clientData = new SaxoClientData(); //
+				clientData.loadClientData(clientData.props.getSharenetHomeLogin(), "LIVE");
+				System.out.println("Fetching LOCAL accounts - DONE");
+				
+				// OFFSHORE
+				
+				System.out.println("Fetching OFFSHORE accounts");
+					SaxoClientData clientDataOffshore = new SaxoClientData();
+					clientDataOffshore = new SaxoClientData();
+					clientDataOffshore.loadClientData(clientDataOffshore.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE");
+					System.out.println("Fetching OFFSHORE accounts - DONE");
+		
+					// GLOBAL
+		
+					System.out.println("Fetching GLOBAL accounts");
+					SaxoClientData clientDataGlobal = new SaxoClientData();
+					clientDataGlobal = new SaxoClientData();
+					clientDataGlobal.loadClientData(clientDataGlobal.props.getSharenetHomeGLOBALLogin(), "GLOBAL");
+					System.out.println("Fetching GLOBAL accounts - DONE");*/
 
 	}
 }

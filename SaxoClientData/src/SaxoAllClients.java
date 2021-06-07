@@ -424,6 +424,8 @@ public class SaxoAllClients {
 
 		if (server.equals("OFFSHORE"))
 			bcode = 69;
+		if (server.equals("GLOBAL"))
+			bcode = 70;
 
 		for (SaxoClientDataObj c : clientList) {
 			System.out.println("SettingSharenetFields for account:" + c.getSaxoUserId() + " bcode:" + bcode);
@@ -438,13 +440,13 @@ public class SaxoAllClients {
 				for (SaxoClientDataObj o : list) {
 					if (c.getSaxoUserId().contentEquals("8551699") || c.getSaxoUserId().contentEquals("13501491")
 							|| c.getSaxoUserId().contentEquals("13501531") || c.getSaxoUserId().contentEquals("13514284")
-							|| c.getSaxoUserId().contentEquals("13514472")) {
+							|| c.getSaxoUserId().contentEquals("13514472") || c.getSaxoUserId().contentEquals("13204882")) {
 					if (saxoClientData.getJDBC().getSaxoClientDataCount(o.getSaxoUserId(), server, props.getClientDataTableName(),
 							o.getDefaultAccountId(), o.getSharenetLogin()) == 0) {
 
 						cnt = saxoClientData.getJDBC().insertSaxoClientData(o, server, houseId, props.getClientDataTableName());
 					} else {
-						if (o.getSharenetLogin() != null)
+						if (o.getSharenetLogin() != null && !o.getSharenetLogin().contentEquals("Test"))
 							cnt = saxoClientData.getJDBC().updateSaxoClientData(o, server, houseId, props.getClientDataTableName());
 
 					}
