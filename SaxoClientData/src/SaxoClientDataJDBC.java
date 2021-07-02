@@ -162,11 +162,11 @@ public List<SaxoClientDataObj> setSharenetFields(SaxoClientDataObj client, int b
 		while(rs.next()) {
 			SaxoClientDataObj o = client.clone();
 			o.setSharenetLogin(rs.getString("LOGIN"));
-			//System.out.println("Setting LOGIN: " + rs.getString("LOGIN") + " saxoid:" + client.getSaxoUserId() + " bcode:" + bcode + " uidn:"
-			//		+ rs.getLong("UIDN"));
+			System.out.println("Setting LOGIN: " + rs.getString("LOGIN") + " saxoid:" + client.getSaxoUserId() + " bcode:" + bcode + " uidn:"
+					+ rs.getLong("UIDN"));
 			o.setSharenetUidn(rs.getLong("UIDN"));
 			list.add(o);
-			if (client.getSaxoUserId().contentEquals("8551699"))
+			if (client.getSaxoUserId().contentEquals("13987934"))
 				System.out.println("MultiACC:" + rs.getString("LOGIN"));
 			
 		}

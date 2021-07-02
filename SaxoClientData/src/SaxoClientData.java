@@ -175,14 +175,14 @@ public class SaxoClientData implements EventsInterface{
 	public static void main(String[] arg) {
 		
 		//ONE CLIENT
-		SaxoClientData sx = new SaxoClientData();
-		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "13501491");
+		//SaxoClientData sx = new SaxoClientData();
+		//sx.getOneClient(sx, sx.props.getSharenetHomeLogin(), "LIVE", "LIVE", "13987934");
 		//sx.getOneClient(sx, sx.props.getSharenetHomeOFFSHORELogin(), "OFFSHORE", "OFFSHORE", "13204882");
-		sx.getOneClient(sx, sx.props.getSharenetHomeGLOBALLogin(), "GLOBAL", "GLOBAL", "10101097");
+		//sx.getOneClient(sx, sx.props.getSharenetHomeGLOBALLogin(), "GLOBAL", "GLOBAL", "10101097");
 		System.exit(0);
-		/*
+
 		// LOCAL//
-		
+
 				System.out.println("Fetching LOCAL accounts"); // SaxoClientData
 				SaxoClientData clientData = new SaxoClientData(); //
 				clientData.loadClientData(clientData.props.getSharenetHomeLogin(), "LIVE");
@@ -202,7 +202,7 @@ public class SaxoClientData implements EventsInterface{
 					SaxoClientData clientDataGlobal = new SaxoClientData();
 					clientDataGlobal = new SaxoClientData();
 					clientDataGlobal.loadClientData(clientDataGlobal.props.getSharenetHomeGLOBALLogin(), "GLOBAL");
-					System.out.println("Fetching GLOBAL accounts - DONE");*/
+					System.out.println("Fetching GLOBAL accounts - DONE");
 
 	}
 }

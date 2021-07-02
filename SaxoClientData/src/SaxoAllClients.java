@@ -440,7 +440,11 @@ public class SaxoAllClients {
 				for (SaxoClientDataObj o : list) {
 					if (c.getSaxoUserId().contentEquals("8551699") || c.getSaxoUserId().contentEquals("13501491")
 							|| c.getSaxoUserId().contentEquals("13501531") || c.getSaxoUserId().contentEquals("13514284")
-							|| c.getSaxoUserId().contentEquals("13514472") || c.getSaxoUserId().contentEquals("13204882")) {
+							|| c.getSaxoUserId().contentEquals("13514472") || c.getSaxoUserId().contentEquals("13204882")
+							|| c.getSaxoUserId().contentEquals("13989121") || c.getSaxoUserId().contentEquals("13987934")
+							|| c.getSaxoUserId().contentEquals("13987990") || c.getSaxoUserId().contentEquals("15012556")
+							|| c.getSaxoUserId().contentEquals("13989205") || c.getSaxoUserId().contentEquals("15012528")
+							) {
 					if (saxoClientData.getJDBC().getSaxoClientDataCount(o.getSaxoUserId(), server, props.getClientDataTableName(),
 							o.getDefaultAccountId(), o.getSharenetLogin()) == 0) {
 
